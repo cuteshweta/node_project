@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const db = require('./db');
 const bodyParser = require('body-parser');
+require('dotenv').config();
 app.use(bodyParser.json());
 // this function gives error save function is not longer take callback 
 // Post route to add Person
@@ -43,6 +44,7 @@ const menuRoutes = require('./routes/menuRoutes');
 
 app.use('/menuitem', menuRoutes);
 
-app.listen(3000, () => {
+const port = process.env.PORT || 3000
+app.listen(port, () => {
     console.log("Listing on Port 3000");
 });
