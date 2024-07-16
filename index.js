@@ -1,46 +1,39 @@
 const express = require('express');
 const app = express();
 const db = require('./db');
+const passport = require('./auth');
 const bodyParser = require('body-parser');
+
 require('dotenv').config();
 app.use(bodyParser.json());
-// this function gives error save function is not longer take callback 
-// Post route to add Person
-// app.post('/person', (req, res) => {
-//     const data = req.body;//Assuming the request body contains tha person data
-//     // create a new person document using mongoose model
-//     const newPerson = new Person(data);
-
-//     // save the data in database
-
-//     newPerson.save((error, savedPerson) => {
-//         if (error) {
-//             console.log("Error Saving Person: ", error);
-//             res.status(500).json({ error: "Internal Server Error" });
-//         } else {
-//             console.log("Person Data Successfully Saved");
-//             res.status(200).json(savedPerson);
-//         }
-//     });
-
-//     // to avoid line of code we have to pass the data in person model show line 14
-//     // newPerson.name=data.name;
-//     // newPerson.age=data.age;
-//     // newPerson.work=data.work;
-
-// });
 
 
-// create menuitem and fatch menu item
 
 
+app.use(passport.initialize());
+const localAuthenticateData = passport.authenticate('local', { session: false });
+
+app.get('/', function (req, res) {
+    res.send("welcome to hotel");
+});
+
+// create moddleware
+const logRequest = (req, res, next) => {
+    const d = new Date();
+    let text = d.toLocaleString();
+    console.log(`${text} Request Mode to : ${req.url}`);
+    next();
+}
+
+app.use(logRequest);
 
 // import person routes
 const personRoutes = require('./routes/personRoutes');
-app.use('/person', personRoutes);
+app.use('/person', localAuthenticateData, personRoutes);
 
 // import menu routes
 const menuRoutes = require('./routes/menuRoutes');
+const Person = require('./models/person');
 
 app.use('/menuitem', menuRoutes);
 

@@ -22,8 +22,13 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const dataUser = await Person.find();
-        console.log("Data saved successfully");
-        res.status(200).json({ datares: dataUser, datamsg: "Data Find successfully" });
+        if (dataUser.length === 0) {
+            res.status(404).json({ datamsg: "Data Not Find" });
+        } else {
+            console.log("Data saved successfully");
+            res.status(200).json({ datares: dataUser, datamsg: "Data Find successfully" });
+        }
+
     } catch (err) {
         console.log("Data failed ", err);
         res.status(500).json({ datamsg: err });
