@@ -29,7 +29,7 @@ app.use(logRequest);
 
 // import person routes
 const personRoutes = require('./routes/personRoutes');
-app.use('/person', localAuthenticateData, personRoutes);
+app.use('/person', personRoutes);
 
 // import menu routes
 const menuRoutes = require('./routes/menuRoutes');
